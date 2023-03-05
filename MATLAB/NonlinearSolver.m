@@ -54,7 +54,7 @@ classdef NonlinearSolver < handle
             defaultDeflation = [];
             
             
-            expectedLinesearch = {'basic'};
+            expectedLinesearch = {'basic', 'l2'};
             validDeflation = @(x) isequal(class(x), 'DeflationOperator');
             validpos = @(x) isnumeric(x) && x > 0;
             
@@ -74,6 +74,8 @@ classdef NonlinearSolver < handle
             
             if isequal(p.Results.linesearch, 'basic')
                 nls.LineSearch = BasicLinesearch;
+            elseif isequal(p.Results.linesearch, 'l2')
+                nls.LineSearch = L2Linesearch;
             end
             
             nls.deflation = p.Results.deflation;
