@@ -1,14 +1,3 @@
-%%%
-% A class that implements various nonlinear solvers that may include 
-% deflation including:
-% 1. A basic Newton solver
-% 2. Hintermueller, Ito & Kunisch's primal dual active-set strategy (HIK)
-% 3. Benson & Munson's reduced active-set strategy (bensonmunson) known as
-% vinewtonrsls in PETSc.
-% 4. Benson & Munson's semismooth active-set strategy (ssls) known as
-% vinewtonssls in PETSc. 
-%%%
-
 classdef NonlinearSolver < handle
     
     properties
@@ -17,6 +6,7 @@ classdef NonlinearSolver < handle
         max_iter = 100;
         deflation = []
         damping = 1;
+        tol = 1e-9;
     end
     
     methods
@@ -41,20 +31,23 @@ classdef NonlinearSolver < handle
                 
             
         end
-
+        
+        
         function y = linesearchBasic(~, x, update, damping)
             y = x + damping * update;
         end
              
-        function nls = NonlinearSolver(varargin) 
+        function nls = NonlinearSolver(varargin)
+            
             defaultLinearSolver = 'backslash';
             defaultLinesearch = 'basic';
             defaultDamping = 1;
             defaultMaxIter = 100;
             defaultDeflation = [];
+            defaultTol = 1e-9;
             
             
-            expectedLinesearch = {'basic', 'l2'};
+            expectedLinesearch = {'basic'};
             validDeflation = @(x) isequal(class(x), 'DeflationOperator');
             validpos = @(x) isnumeric(x) && x > 0;
             
@@ -65,8 +58,10 @@ classdef NonlinearSolver < handle
                 @(x) any(validatestring(x,expectedLinesearch)));
             addParameter(p, 'damping', defaultDamping, validpos);
             addParameter(p, 'max_iter', defaultMaxIter, validpos);
-            
+            addParameter(p, 'tol', defaultTol, validpos);
+
             parse(p,varargin{:});
+            
 
             if isequal(p.Results.linearsolver, 'backslash')
                 nls.LinearSolver = MatlabBackslash;
@@ -74,17 +69,14 @@ classdef NonlinearSolver < handle
             
             if isequal(p.Results.linesearch, 'basic')
                 nls.LineSearch = BasicLinesearch;
-            elseif isequal(p.Results.linesearch, 'l2')
-                nls.LineSearch = L2Linesearch;
             end
             
             nls.deflation = p.Results.deflation;
             nls.damping = p.Results.damping;
             nls.max_iter = floor(p.Results.max_iter);
+            nls.tol = p.Results.tol;
         end
         
-        % Basic Newton solver that also takes into account any deflation
-        % that may be included.
         function root = newton(nls, state, residual, jacobian)
             [state, residual] = nls.checkArguments(state, residual);
             iter = 0;
@@ -93,8 +85,11 @@ classdef NonlinearSolver < handle
             evaluatedJacobian = jacobian(x);
             normEvaluatedResidual = norm(evaluatedResidual,2);
             fprintf('Iteration %i, residual norm = %e\n', iter, normEvaluatedResidual);
-            while normEvaluatedResidual > 1e-9  && iter < nls.max_iter
-                update = nls.LinearSolver.solve(evaluatedJacobian, evaluatedResidual);      
+            while normEvaluatedResidual > nls.tol  && iter < nls.max_iter
+                update = nls.LinearSolver.solve(evaluatedJacobian, evaluatedResidual);
+               
+                
+                
                 if ~isempty(nls.deflation)
                     stepadjustment = nls.deflation.deflationStepAdjustment(x, update);
                     update = update * stepadjustment;
@@ -114,9 +109,8 @@ classdef NonlinearSolver < handle
             root = x;
         end
         
-        % The reduced space Benson & Munson active-set strategy. Newton
-        % that may enforce box constraints. 
-        function root = bensonmunson(nls, state, lb, ub, residual, jacobian) 
+        function root = bensonmunson(nls, state, lb, ub, residual, jacobian)
+            
             [state, residual] = nls.checkArguments(state, residual);
             index = 1:size(state,1);
             iter = 0;
@@ -175,7 +169,6 @@ classdef NonlinearSolver < handle
             root = x;
         end
         
-        % Helper functions for HIK
         function out = reducedResidual(nls, evaluatedResidual, x, lb, ub)
             out = evaluatedResidual;
             out(x<=lb) = min(out(x<=lb),0);
@@ -188,8 +181,6 @@ classdef NonlinearSolver < handle
             b(x>ub) = ub(x>ub);
         end
         
-        % The Hintermeuller, Ito and Kunisch primal-dual active-set
-        % strategy
         function root = hik(nls, state, lb, ub, residual, jacobian)
             [state, residual] = nls.checkArguments(state, residual);
             index = 1:size(state,1);
@@ -267,7 +258,6 @@ classdef NonlinearSolver < handle
             root = x;
         end
         
-        % The Benson & Munson semismooth active-set strategy.
         function root = ssls(nls, state, lb, ub, residual, jacobian)
             [state, residual] = nls.checkArguments(state, residual);
             iter = 0;
@@ -320,7 +310,6 @@ classdef NonlinearSolver < handle
             root = x;
         end
         
-        % Helper functions for ssls
         function out = Phi(nls, a, b)
             out = a + b - sqrt(a.^2 + b.^2);      
         end
