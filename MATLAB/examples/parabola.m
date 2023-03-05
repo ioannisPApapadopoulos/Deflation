@@ -8,7 +8,7 @@
 % x - y = -1
 % y = x^2 + 1
 
-addpath(genpath('../deflation'));
+addpath(genpath('../'));
 
 % Intialise starting value
 x = [3,3]';

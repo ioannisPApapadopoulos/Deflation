@@ -16,7 +16,7 @@
 % at x = [1/4,1/2]^T. The central path to be followed by an interior point method 
 % is pathological, with different paths converging to the different minima.
 
-addpath(genpath('../deflation'));
+addpath(genpath('../'));
 
 % Intialise starting value
 x = [0.2,0.2,0,0]';

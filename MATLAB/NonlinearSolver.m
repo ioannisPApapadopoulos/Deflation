@@ -1,3 +1,14 @@
+%%%
+% A class that implements various nonlinear solvers that may include 
+% deflation including:
+% 1. A basic Newton solver
+% 2. Hintermueller, Ito & Kunisch's primal dual active-set strategy (HIK)
+% 3. Benson & Munson's reduced active-set strategy (bensonmunson) known as
+% vinewtonrsls in PETSc.
+% 4. Benson & Munson's semismooth active-set strategy (ssls) known as
+% vinewtonssls in PETSc. 
+%%%
+
 classdef NonlinearSolver < handle
     
     properties
@@ -30,14 +41,12 @@ classdef NonlinearSolver < handle
                 
             
         end
-        
-        
+
         function y = linesearchBasic(~, x, update, damping)
             y = x + damping * update;
         end
              
-        function nls = NonlinearSolver(varargin)
-            
+        function nls = NonlinearSolver(varargin) 
             defaultLinearSolver = 'backslash';
             defaultLinesearch = 'basic';
             defaultDamping = 1;
@@ -58,7 +67,6 @@ classdef NonlinearSolver < handle
             addParameter(p, 'max_iter', defaultMaxIter, validpos);
             
             parse(p,varargin{:});
-            
 
             if isequal(p.Results.linearsolver, 'backslash')
                 nls.LinearSolver = MatlabBackslash;
@@ -73,6 +81,8 @@ classdef NonlinearSolver < handle
             nls.max_iter = floor(p.Results.max_iter);
         end
         
+        % Basic Newton solver that also takes into account any deflation
+        % that may be included.
         function root = newton(nls, state, residual, jacobian)
             [state, residual] = nls.checkArguments(state, residual);
             iter = 0;
@@ -82,10 +92,7 @@ classdef NonlinearSolver < handle
             normEvaluatedResidual = norm(evaluatedResidual,2);
             fprintf('Iteration %i, residual norm = %e\n', iter, normEvaluatedResidual);
             while normEvaluatedResidual > 1e-9  && iter < nls.max_iter
-                update = nls.LinearSolver.solve(evaluatedJacobian, evaluatedResidual);
-               
-                
-                
+                update = nls.LinearSolver.solve(evaluatedJacobian, evaluatedResidual);      
                 if ~isempty(nls.deflation)
                     stepadjustment = nls.deflation.deflationStepAdjustment(x, update);
                     update = update * stepadjustment;
@@ -105,8 +112,9 @@ classdef NonlinearSolver < handle
             root = x;
         end
         
-        function root = bensonmunson(nls, state, lb, ub, residual, jacobian)
-            
+        % The reduced space Benson & Munson active-set strategy. Newton
+        % that may enforce box constraints. 
+        function root = bensonmunson(nls, state, lb, ub, residual, jacobian) 
             [state, residual] = nls.checkArguments(state, residual);
             index = 1:size(state,1);
             iter = 0;
@@ -165,6 +173,7 @@ classdef NonlinearSolver < handle
             root = x;
         end
         
+        % Helper functions for HIK
         function out = reducedResidual(nls, evaluatedResidual, x, lb, ub)
             out = evaluatedResidual;
             out(x<=lb) = min(out(x<=lb),0);
@@ -177,6 +186,8 @@ classdef NonlinearSolver < handle
             b(x>ub) = ub(x>ub);
         end
         
+        % The Hintermeuller, Ito and Kunisch primal-dual active-set
+        % strategy
         function root = hik(nls, state, lb, ub, residual, jacobian)
             [state, residual] = nls.checkArguments(state, residual);
             index = 1:size(state,1);
@@ -254,6 +265,7 @@ classdef NonlinearSolver < handle
             root = x;
         end
         
+        % The Benson & Munson semismooth active-set strategy.
         function root = ssls(nls, state, lb, ub, residual, jacobian)
             [state, residual] = nls.checkArguments(state, residual);
             iter = 0;
@@ -306,6 +318,7 @@ classdef NonlinearSolver < handle
             root = x;
         end
         
+        % Helper functions for ssls
         function out = Phi(nls, a, b)
             out = a + b - sqrt(a.^2 + b.^2);      
         end
