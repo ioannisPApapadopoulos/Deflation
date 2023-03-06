@@ -1,7 +1,7 @@
 using LinearAlgebra, ForwardDiff
 import ForwardDiff: jacobian
-include("../deflationoperator.jl")
-include("../nonlinearsolver.jl")
+include("../../src/Julia/deflationoperator.jl")
+include("../../src/Julia/nonlinearsolver.jl")
 
 """
 Example using Newton's method & deflation

@@ -27,7 +27,7 @@ function F(u)
 end
 
 # Jacobian + bcs
-function J(x)
+function J(u)
     A = jacobian(u->F(u), u)
     A[:,1] .= 0; A[1,:] .= 0;
     A[1,1] = 1; A[end,end] = 1;
