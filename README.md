@@ -10,6 +10,16 @@ In the parent directory `self_contained_bratu.jl` is a self-contained Julia scri
 
 There also codes for various active-set strategies for solving nonlinear systems that involve box constraints. 
 
+## Other software
+
+For more heavy-weight software that uses deflation, checkout:
+
+1. defcon for bifurcation analysis (https://bitbucket.org/pefarrell/defcon) 
+2. fir3dab for multiple solutions of 3D topology optimisation problems (https://github.com/ioannisPApapadopoulos/fir3dab)
+3. BifurcationKit.jl for bifurcation analysis (https://github.com/bifurcationkit/BifurcationKit.jl)
+
+## References
+
 If you use code found in this repository, I would be grateful if you cited:
 
 1. Farrell, Birkisson and Funke (2015) https://doi.org/10.1137/140984798
