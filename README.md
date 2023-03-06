@@ -8,8 +8,6 @@ On a computational level, deflation is very easy to implement. One solves the or
 
 In the parent directory `self_contained_bratu.jl` is a self-contained Julia script for finding two solutions of a finite difference discretisation of the 1D Bratu equation from the same initial guess via deflation. The deflation operator is implemented in 2 lines! The `examples/` folder contains more examples using a slightly more sophisticated backend found in `src/`
 
-**DISCLAIMER**: These scripts are untested and may contain bugs. Please raise a GitHub issue if you find any :)
-
 There also codes for various active-set strategies for solving nonlinear systems that involve box constraints. 
 
 If you use code found in this repository, I would be grateful if you cited:
@@ -29,3 +27,12 @@ If one uses either of the Benson-Munson active-set strategies:
 ..or if one uses the primal-dual active set strategy (HIK) as implemented in this repository:
 
 6. Hintermüller, Ito, Kunisch (2002) https://doi.org/10.1137/S1052623401383558
+
+## DISCLAIMER
+
+These scripts are untested and may contain bugs. Please raise a GitHub issue if you find any :)
+
+Not everything is implemented in each of the three programming languages. If you have any requests, please raise a Github issue and I will be happy to help.
+
+## CONTACT
+ioannis.papadopoulos13@imperial.ac.uk
