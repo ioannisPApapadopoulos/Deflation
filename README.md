@@ -38,11 +38,11 @@ If one uses either of the Benson-Munson active-set strategies:
 
 6. Hintermüller, Ito, Kunisch (2002) https://doi.org/10.1137/S1052623401383558
 
-## DISCLAIMER
+## Disclaimer
 
 These scripts are untested and may contain bugs. Please raise a GitHub issue if you find any :)
 
 Not everything is implemented in each of the three programming languages. If you have any requests, please raise a Github issue and I will be happy to help.
 
-## CONTACT
+## Contact
 ioannis.papadopoulos13@imperial.ac.uk
