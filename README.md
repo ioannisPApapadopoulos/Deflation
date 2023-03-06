@@ -2,11 +2,11 @@
 
 This repository contains untested codes in MATLAB, Julia, and Python for the implementation of the deflation algorithm for systematically computing multiple solutions of nonlinear systems (such as discretised PDEs).
 
-For a description of the algorithm and its justification to infinite-dimensional problems, please read https://doi.org/10.1137/140984798 and https://doi.org/10.1080/10556788.2019.1613655 
+For a description of the algorithm and its extension to infinite-dimensional problems, please read https://doi.org/10.1137/140984798 and https://doi.org/10.1080/10556788.2019.1613655 
 
 On a computational level, deflation is very easy to implement. One solves the original _undeflated_ Newton/active-set system and simply multiplies the Newton update with a scalar (denoted by tau throughout the code). The scalar tau depends explicitly on the current Newton iterate and the Newton update of the undeflated Newton system. For the formula, checkout Eq. 3.23 in https://doi.org/10.1137/20M1326209
 
-In the parent directory `self_contained_bratu.jl` is a self-contained Julia script for finding two solutions of a finite difference discretisation of the 1D Bratu equation from the same initial guess via deflation. The deflation operator is implemented in 2 lines! The `examples/` folder contains more examples using a slightly more sophisticated backend found in `src/`
+In the parent directory `bratu_self_contained.jl` is a self-contained Julia script for finding two solutions of a finite difference discretisation of the 1D Bratu equation from the same initial guess via deflation. The deflation operator is implemented in 2 lines! The `examples/` folder contains more examples using a slightly more sophisticated backend found in `src/`
 
 There also codes for various active-set strategies for solving nonlinear systems that involve box constraints. 
 
