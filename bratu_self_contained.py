@@ -8,8 +8,10 @@ Self-contained Python script for deflation!
 Finding two solutions of the Bratu equation
     u''(x) + λeᵘ(x) = 0
     u(0) = u(1) = 0.
-This problem has one solution if lmbda = 0 or lmbda = lmbda*, 
-two solutions if 0 < lmbda < lmbda*, and no solutions if lmbda > lmbda* where lmbda* ≈ 3.513830719. 
+This problem has one solution if λ = 0 or λ = λ*, 
+two solutions if 0 < λ < λ*, and no solutions if λ > λ* where λ* ≈ 3.513830719. 
+
+Script generated with the aid of ChatGPT from the Julia script "bratu_self_contained.jl".
 """
 
 # Setup of finite difference stencil
