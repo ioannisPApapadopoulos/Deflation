@@ -6,9 +6,9 @@ For a description of the algorithm and its extension to infinite-dimensional pro
 
 On a computational level, deflation is very easy to implement. One solves the original _undeflated_ Newton/active-set system and simply multiplies the Newton update with a scalar (denoted by tau throughout the code). The scalar tau depends explicitly on the current Newton iterate and the Newton update of the undeflated Newton system. For the formula, checkout Eq. 3.23 in https://doi.org/10.1137/20M1326209
 
-In the parent directory `bratu_self_contained.jl` is a self-contained Julia script for finding two solutions of a finite difference discretisation of the 1D Bratu equation from the same initial guess via deflation. The deflation operator is implemented in 2 lines! The `examples/` folder contains more examples using a slightly more sophisticated backend found in `src/`
+In the parent directory `bratu_self_contained.jl` and `bratu_self_contained.py` are a self-contained Julia and Python scripts for finding two solutions of a finite difference discretisation of the 1D Bratu equation from the same initial guess via deflation. The deflation operator is implemented in 2-3 lines! The `examples/` folder contains more examples using a slightly more sophisticated backend found in `src/`
 
-There also codes for various active-set strategies for solving nonlinear systems that involve box constraints. 
+There are also codes for various active-set strategies for solving nonlinear systems that involve box constraints. 
 
 ## Other software
 
