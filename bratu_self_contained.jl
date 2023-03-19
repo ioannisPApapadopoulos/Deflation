@@ -3,7 +3,7 @@ using Plots
 import ForwardDiff: jacobian, gradient
 
 """
-Self-contained script for deflation!
+Self-contained Julia script for deflation!
 
 Finding two solutions of the Bratu equation
     u''(x) + λeᵘ(x) = 0
@@ -31,6 +31,7 @@ end
 function J(u)
     A = jacobian(u->F(u), u)
     A[:,1] .= 0; A[1,:] .= 0;
+    A[:,end] .= 0; A[end,:] .= 0;
     A[1,1] = 1; A[end,end] = 1;
     return A
 end
