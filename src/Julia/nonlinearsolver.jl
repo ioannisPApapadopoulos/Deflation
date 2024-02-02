@@ -57,7 +57,6 @@ function bensonmunson(x::AbstractVector{T}, lb::AbstractVector{T}, ub::AbstractV
 
     index = Vector(1:lastindex(x))
     iter = 0
-    inactive = index[:]
 
     project!(x, lb, ub)
 
@@ -66,6 +65,14 @@ function bensonmunson(x::AbstractVector{T}, lb::AbstractVector{T}, ub::AbstractV
 
     norm_residual_Ω = norm(reduced_residual(r, x, lb, ub))
     print("Iteration 0, residual norm = $norm_residual_Ω\n")
+
+    active_lb = findall(x .≈ lb) ∩ findall(r .> 0)
+    active_ub = findall(x .≈ ub) ∩ findall(r .< 0)
+    active = vcat(active_lb, active_ub)
+
+    tmp_index = index[:]
+    tmp_index[active] .= 0
+    inactive  = findall(x->x!=0, tmp_index)
 
     n = length(x)
 
