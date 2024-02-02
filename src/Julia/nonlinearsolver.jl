@@ -36,7 +36,7 @@ end
 Benson-Munson RSLS
 """
 function reduced_residual(r::AbstractVector{T}, x::AbstractVector{T}, lb::AbstractVector{T}, ub::AbstractVector{T}) where T
-    rr = r
+    rr = r[:]
     rr[x .<= lb] = min.(rr[x .<= lb], zero(T))
     rr[x .>= ub] = max.(rr[x .>= ub], zero(T))
     return rr
@@ -57,7 +57,7 @@ function bensonmunson(x::AbstractVector{T}, lb::AbstractVector{T}, ub::AbstractV
 
     index = Vector(1:lastindex(x))
     iter = 0
-    inactive = index
+    inactive = index[:]
 
     project!(x, lb, ub)
 
@@ -96,7 +96,7 @@ function bensonmunson(x::AbstractVector{T}, lb::AbstractVector{T}, ub::AbstractV
         active_ub = index[x .>=ub]
         active_ub = intersect(active_ub, index[r .< zero(T)])
         active = vcat(active_lb, active_ub)
-        index2 = index
+        index2 = index[:]
         index2[active] .= 0
         inactive  = findall(x->x!=0, index2)
 

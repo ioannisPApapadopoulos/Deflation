@@ -45,4 +45,4 @@ These scripts are untested and may contain bugs. Please raise a GitHub issue if 
 Not everything is implemented in each of the three programming languages. If you have any requests, please raise a Github issue and I will be happy to help.
 
 ## Contact
-ioannis.papadopoulos13@imperial.ac.uk
+papadopoulos@wias-berlin.de
